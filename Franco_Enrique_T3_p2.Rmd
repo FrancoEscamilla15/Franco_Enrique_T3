@@ -1,0 +1,98 @@
+---
+title: "Franco_Enrique_T3_p2"
+author: "Enrique Franco García"
+date: "19/3/2022"
+output: html_document
+---
+
+**Red booleana**
+
+*Genera una red de regulación transripcional con 5 nodos y, al menos, 7 interacciones regulatorias, escoge al menos 3 inhibiciones).*
+
+Lo primero que debemos de hacer es cargar la librería con la que vamos a trabajar, en este caso es BoolNet
+
+```{r}
+library(BoolNet)
+```
+
+1.  Escribe las tablas de verdad de las reglas
+
+
+```{r}
+reglas <- loadNetwork("reglas.txt")
+reglas
+```
+
+2.  Escribe las reglas para generar una red de tipo Boolnet.
+
+Tabla de verdad de A
+
+| B | D | D AND NOT B |   |   |
+|---|---|-------------|---|---|
+| 0 | 0 |      0      |   |   |
+| 1 | 0 |      0      |   |   |
+| 0 | 1 |      1      |   |   |
+| 1 | 1 |      0      |   |   |
+
+Tabla de verdad de B
+
+| C | E | C OR NOT E |
+|---|---|------------|
+| 0 | 0 |      1     |
+| 1 | 0 |      1     |
+| 0 | 1 |      0     |
+| 1 | 1 |      1     |
+
+Tabla de verdad de C
+
+| C | E |
+|---|---|
+| 0 | 0 |
+| 1 | 1 |
+
+Tabla de verdad de D
+
+| B | A | B OR NOT A |
+|---|---|------------|
+| 0 | 0 |      1     |
+| 1 | 0 |      1     |
+| 0 | 1 |      0     |
+| 1 | 1 |      1     |
+
+Tabla de verdad de E
+
+| F | A | F & A |
+|---|---|-------|
+| 0 | 0 |   0   |
+| 1 | 0 |   0   |
+| 0 | 1 |   0   |
+| 1 | 1 |   1   |
+
+Tabla de verdad de F
+
+| C | E | C AND NOT E |
+|---|---|-------------|
+| 0 | 0 |      0      |
+| 1 | 0 |      1      |
+| 0 | 1 |      0      |
+| 1 | 1 |      0      |
+
+
+3.  Encuentra todos los atractores de tu red
+
+```{r}
+getAttractors(network = reglas)
+```
+
+4.  ¿Cuál sería el estado final más probable?
+
+El primero de los estados es el atractor 1 el cual consiste en 44 estados y termina en 010100 y significa que A, C, E & F estan apagados y solo B & D permanecen activos, mientras que el segundo solamente tiene 2o estados pero termina en:
+
+001100 (A, B, E & F están inactivos y C & D están activos)
+
+110101 (C & E están inactivos y A, B, D & F están activos)
+
+010110 (A, C & F están inactivos y B, D & E están activos)
+
+
+5.  Dibuja todos los estados y sus atractores

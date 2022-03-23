@@ -1,0 +1,47 @@
+---
+title: "Franco_Enrique_T3_p4"
+author: "Enrique Franco García"
+date: "22/3/2022"
+output: html_document
+---
+
+**Red de señalización**
+
+Lo primero es cargar la librería que se va a utilizar
+
+```{r}
+library(BoolNet)
+```
+
+A partir de la red de se ̃nalizaci ́on mostrada en la figura 1
+
+\(a\) Elabora una representación verbal de la red
+
+Esta red es una cascada de señalización presente en las plantas relacionado con la sequía y el cierre te los estomas, en la red tenemos 3 principales protagonistas: "CIS", "CA2" & "Depolar", pese a que los 3 presentan diversos inhibidores la red se puede dar gracias a que no es una sola señal la que puede activar o inhibirlos y deben de cumplirse diversas condiciones para que la cascada se detenga y se de como consecuencia el cierre de los estromas
+
+\(b\) Elabora una tabla de posibles reglas de la red
+
+targets, factors
+CIS, cGMP & cADPR & InsP3
+cGMP, GC
+cADPR, ADPRc
+InsP3, PLD
+GC, NO
+ADPRc, NO
+PLC,Ca 2
+NO, NOS
+NOS, Ca 2
+Ca2, CalM & !Ca ATPase & CIS
+Ca ATPase, Ca 2
+CalM, !Depolar
+KEV, Ca2
+H ATPase, !Ca 2
+AnionEM, Ca 2
+Closure, AnionEM & KOUT & KAP
+KOUT, Depolar
+KAP, Depolar
+Depolar, AnionEM & !KOUT & Ca2 & !H ATPase & KEV
+
+\(c\) Encuentra y discute biológicamente el significado de los atractores (Usa BoolNet)
+
+Los atractores representan el cierre de los estromas en la planta y por consecuencia la desecación de la planta a causa de la falta de agua, para que un atractor se de es necesario que se pasen todos los estados en los que se inhiban y activen los diferentes componentes de la red, debido a que hay gran cantidad de inhibidores y activadores pasaran gran cantidad de estados para que la cascada finalice lo cual tiene todo el sentido del mundo porque si fueran pocos estados o una red mucho menos compleja la planta se secaría en cuestión de minutos ante la ausencia de agua, cosa que no ocurre en la vida real.

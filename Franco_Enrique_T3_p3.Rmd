@@ -1,0 +1,144 @@
+---
+title: "Franco_Enrique_T3_p3"
+author: "Enrique Franco García"
+date: "19/3/2022"
+output: html_document
+---
+
+**Red de co-gustos**
+
+Es necesario usar iGraph por lo cual hay que cargarla desde un principio
+
+```{r}
+library(igraph)
+```
+
+El primer paso a realizar es cargar nuestra red de co-gustos con ayuda de la función "read.csv"
+
+```{r}
+redcogustos <- read.csv("Red cogustos.csv")
+row.names(redcogustos) <- redcogustos[,1]
+redcogustos <- redcogustos[,-1]
+red <- cor(t(redcogustos))
+diag(red) <- 0
+#Todas las funciones utilizadas posterior a cargar la red unicamente son para ordenar la red y que sea más fácil trabajar con ellas
+```
+
+Para la realizar la matriz de adyacencia se hace de la siguiente manera:
+
+```{r}
+adyacencia <- (1+red)/2 #La matriz de adyacencia es de utilidad ya que gracias a esta podemos ajustar de mejor manera los datoa
+diag(adyacencia) <- 0 
+```
+
+Por otro lado para realizar la matriz de adyacencia de la red dicótomica se hace de la siguiente manera:
+
+```{r}
+di_adyacencia <- ifelse(adyacencia > 0.5, 1, 0)
+```
+
+**Ejercicios:**
+
+A partir de las dos versiones de la red de co-gustos: la dicotómica (D) y la pesada (P).:Elabora un programa en R que calcule
+
+1.  Dibuja la red con al menos tres layouts (D y P).
+
+*A. Red dicótomica*
+
+Para esto se crea la gráfica a partir de la matriz de adyacencia de la siguiente manera:
+
+```{r}
+g_dicotomica <- graph_from_adjacency_matrix(di_adyacencia, mode = "undirected")
+plot(g_dicotomica)
+```
+
+Layouts con la red dicótomica
+
+Para los layouts se hace de la siguiente manera:
+
+```{r}
+#Primero
+layout_dicotomica_1 <- layout.lgl(g_dicotomica)
+LD_1 <- plot(g_dicotomica, layout = layout_dicotomica_1, edge.arrow.size = 0.5, vertex.sizes = 5)
+#Segundo
+layout_dicotomica_2 <- layout.grid(g_dicotomica)
+LD_2 <- plot(g_dicotomica, layout = layout_dicotomica_2, edge.arrow.size = 0.5, vertex.sizes = 5)
+#Tercero
+layout_dicotomica_3 <- layout.drl(g_dicotomica)
+LD_3 <- plot(g_dicotomica, layout = layout_dicotomica_3, edge.arrow.size = 0.5, vertex.sizes = 5)
+```
+
+*B. Red pesada*
+
+Al igual que como lo hicimos con la red dicotómica aquí también vamos a generar la gráfica a partir de la matriz de adyacencia
+
+```{r}
+g_pesada <- graph_from_adjacency_matrix(adyacencia, mode = "undirected")
+plot(g_pesada)
+```
+
+Layouts con red pesada
+
+```{r}
+layout_pesada_1 <- layout.star(g_pesada)
+LP_1 <- plot(g_pesada, layout = layout_pesada_1, edge.arrow.size = 0.5, vertex.sizes = 5)
+layout_pesada_2 <- layout.auto(g_pesada)
+LP_2 <- plot(g_pesada, layout = layout_pesada_2, edge.arrow.size = 0.5, vertex.sizes = 5)
+layout_pesada_3 <- layout.graphopt(g_pesada)
+LP_3 <- plot(g_pesada, layout = layout_pesada_3)
+```
+
+2.  La distribución de conectividades (D).
+
+```{r}
+dc_dicotomica <- degree(g_dicotomica)
+dc_dicotomica
+hist(dc_dicotomica)
+```
+
+3.  Los nodos más conectados (D)
+
+```{r}
+nodd <- degree(g_dicotomica, mode = "all")
+sort(nodd, decreasing = TRUE)[1:13]
+```
+
+4.  Los nodos más importantes con al menos tres medidas de centralidad (D)
+
+```{r}
+dcentralidad_1 <- centralization.betweenness(g_dicotomica)
+dcentralidad_1
+dcentralidad_2 <- centralization.degree(g_dicotomica)
+dcentralidad_2
+dcentralidad_3 <- centralization.closeness(g_dicotomica)
+dcentralidad_3
+```
+
+5.  Los clústers obtenidos con al menos tres m ́etodos de clusterizaci ́on (D y P)
+
+*Red pesada*
+
+```{r}
+pcluster_1 <- cluster_edge_betweenness(g_pesada)
+membership(pcluster_1)
+pcluster_2 <- cluster_fast_greedy(g_pesada)
+membership(pcluster_2)
+pcluster_3 <- cluster_infomap(g_pesada)
+membership(pcluster_3)
+#Para los 3 casos use 3 métodos de clusterización diferentes y con la función membership podía ver que contenía cada uno de ellos
+```
+
+*Red dicótomica*
+
+```{r}
+dcluster_1 <- cluster_walktrap(g_dicotomica)
+membership(dcluster_1)
+dcluster_2 <- cluster_optimal(g_dicotomica)
+membership(dcluster_2)
+dcluster_3 <- cluster_leading_eigen(g_dicotomica)
+membership(dcluster_3)
+```
+
+5.  Discute si las redes (D y P) son dirigidas o no.
+
+6.  ¿Cómo podrías encontrar clicas, si las hay?
